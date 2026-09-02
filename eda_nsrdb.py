@@ -1,0 +1,198 @@
+"""
+GenerativeAURORA - Exploratory Data Analysis
+Run this after merge_nsrdb.py.
+
+What this does:
+    1. Loads nsrdb_merged.parquet
+    2. Prints detailed stats per site and per regime
+    3. Saves a regime distribution table to CSV
+    4. Saves hourly GHI profile averages to CSV (useful for paper figures)
+    5. Checks for missing values and data quality issues
+
+No plots (you have RTX 4080 Super for model training, not for GUI).
+All output is CSV/text so you can open in Excel.
+
+Run:
+    python eda_nsrdb.py
+"""
+
+import pandas as pd
+import numpy as np
+import os
+
+PARQUET_FILE  = "nsrdb_merged.parquet"
+OUTPUT_DIR    = "eda_output"
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+
+def load_data():
+    print("Loading " + PARQUET_FILE + "...")
+    df = pd.read_parquet(PARQUET_FILE)
+    print("Loaded " + str(len(df)) + " rows, " + str(len(df.columns)) + " columns.")
+    print("Columns: " + str(list(df.columns)))
+    print("")
+    return df
+
+
+def check_missing(df):
+    print("=== Missing value check ===")
+    key_cols = ["GHI", "DHI", "DNI", "WIND SPEED", "AIR TEMPERATURE",
+                "RELATIVE HUMIDITY", "CLEARNESS_INDEX", "SKY_REGIME"]
+    for col in key_cols:
+        if col in df.columns:
+            n_missing = df[col].isna().sum()
+            pct = round(100.0 * n_missing / len(df), 2)
+            status = "OK" if n_missing == 0 else "CHECK"
+            print("  " + col.ljust(25) + " missing: " + str(n_missing) + " (" + str(pct) + "%)  " + status)
+        else:
+            print("  " + col.ljust(25) + " NOT FOUND in dataset")
+    print("")
+
+
+def regime_distribution(df):
+    print("=== Sky regime distribution per site ===")
+    site_col = "SITE_NAME" if "SITE_NAME" in df.columns else "SITE"
+
+    table = df.groupby([site_col, "SKY_REGIME"]).size().unstack(fill_value=0)
+    table["TOTAL"] = table.sum(axis=1)
+    for regime in ["Clear", "Cloudy", "Overcast"]:
+        if regime in table.columns:
+            table[regime + "_PCT"] = (100.0 * table[regime] / table["TOTAL"]).round(1)
+
+    print(table.to_string())
+    out = os.path.join(OUTPUT_DIR, "regime_distribution.csv")
+    table.to_csv(out)
+    print("Saved to " + out)
+    print("")
+    return table
+
+
+def hourly_ghi_profile(df):
+    """
+    Average GHI by hour-of-day per site and per regime.
+    This is the 'typical day profile' — useful for Figure 1 in the paper.
+    """
+    print("=== Hourly GHI profile (average per site) ===")
+    site_col = "SITE_NAME" if "SITE_NAME" in df.columns else "SITE"
+    hour_col = "HOUR" if "HOUR" in df.columns else None
+
+    if hour_col is None:
+        print("  WARNING: No HOUR column found. Skipping hourly profile.")
+        return
+
+    profile = df.groupby([site_col, hour_col])["GHI"].mean().round(1).unstack(level=0)
+    print(profile.to_string())
+
+    out = os.path.join(OUTPUT_DIR, "hourly_ghi_profile.csv")
+    profile.to_csv(out)
+    print("Saved to " + out)
+    print("")
+
+
+def seasonal_stats(df):
+    """
+    Stats broken down by season (DJF/MAM/JJA/SON).
+    Useful to show that GenerativeAURORA captures seasonal distribution shift.
+    """
+    print("=== Seasonal GHI statistics per site ===")
+    site_col = "SITE_NAME" if "SITE_NAME" in df.columns else "SITE"
+
+    if "MONTH" not in df.columns:
+        print("  WARNING: No MONTH column. Skipping seasonal stats.")
+        return
+
+    season_map = {
+        12: "DJF", 1: "DJF", 2: "DJF",
+        3:  "MAM", 4: "MAM", 5: "MAM",
+        6:  "JJA", 7: "JJA", 8: "JJA",
+        9:  "SON", 10: "SON", 11: "SON",
+    }
+    df = df.copy()
+    df["SEASON"] = df["MONTH"].map(season_map)
+
+    seasonal = df.groupby([site_col, "SEASON"])["GHI"].agg(["mean", "std", "max"]).round(1)
+    print(seasonal.to_string())
+
+    out = os.path.join(OUTPUT_DIR, "seasonal_ghi_stats.csv")
+    seasonal.to_csv(out)
+    print("Saved to " + out)
+    print("")
+
+
+def clearness_index_stats(df):
+    """
+    Clearness index distribution — key input to sky regime gating.
+    This is what differentiates your 5 sites from each other.
+    """
+    print("=== Clearness index distribution per site ===")
+    site_col = "SITE_NAME" if "SITE_NAME" in df.columns else "SITE"
+
+    if "CLEARNESS_INDEX" not in df.columns:
+        print("  WARNING: CLEARNESS_INDEX column not found.")
+        return
+
+    bins = [0.0, 0.10, 0.35, 0.60, 0.80, 1.01]
+    labels = ["0.00-0.10 (Overcast)", "0.10-0.35 (Cloudy)", "0.35-0.60 (Partly Clear)", "0.60-0.80 (Mostly Clear)", "0.80-1.00 (Clear)"]
+    df = df.copy()
+    df["CI_BIN"] = pd.cut(df["CLEARNESS_INDEX"], bins=bins, labels=labels, right=False)
+
+    ci_table = df.groupby([site_col, "CI_BIN"]).size().unstack(fill_value=0)
+    print(ci_table.to_string())
+
+    out = os.path.join(OUTPUT_DIR, "clearness_index_distribution.csv")
+    ci_table.to_csv(out)
+    print("Saved to " + out)
+    print("")
+
+
+def data_quality_report(df):
+    """
+    Final data quality summary — rows per site/year, any gaps.
+    """
+    print("=== Data quality report ===")
+    site_col = "SITE_NAME" if "SITE_NAME" in df.columns else "SITE"
+
+    if "YEAR" in df.columns and site_col in df.columns:
+        counts = df.groupby([site_col, "YEAR"]).size().unstack(fill_value=0)
+        print("Rows per site per year:")
+        print(counts.to_string())
+
+        out = os.path.join(OUTPUT_DIR, "rows_per_site_year.csv")
+        counts.to_csv(out)
+        print("Saved to " + out)
+
+    # Expected: 2020 is leap year so ~8784 daytime-filtered rows before filter,
+    # after daytime filter approximately 4000-5000 rows per site per year depending on latitude
+    print("")
+    print("Note: 2020 has 8784 total hours (leap year). All other years have 8760.")
+    print("After daytime filtering, expect roughly 4000-5500 rows per site per year.")
+    print("")
+
+
+def main():
+    print("GenerativeAURORA - EDA Script")
+    print("")
+
+    df = load_data()
+    check_missing(df)
+    regime_distribution(df)
+    hourly_ghi_profile(df)
+    seasonal_stats(df)
+    clearness_index_stats(df)
+    data_quality_report(df)
+
+    print("=== EDA complete ===")
+    print("All output tables saved to: " + OUTPUT_DIR + "/")
+    print("")
+    print("Files produced:")
+    for f in os.listdir(OUTPUT_DIR):
+        fpath = os.path.join(OUTPUT_DIR, f)
+        size_kb = round(os.path.getsize(fpath) / 1024, 1)
+        print("  " + f.ljust(40) + str(size_kb) + " KB")
+    print("")
+    print("Next step: run build_sequences.py to prepare training windows for the diffusion model.")
+
+
+if __name__ == "__main__":
+    main()
