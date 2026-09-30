@@ -54,7 +54,6 @@ Clearness Index is calculated as:
 The resulting value is clipped to the range [0, 1].
 
 Each observation is then assigned to one of three sky regimes:
-
     Clearness Index <= 0.10        -> Overcast
     0.10 < Clearness Index <= 0.35 -> Cloudy
     Clearness Index > 0.35         -> Clear
@@ -119,7 +118,6 @@ If all downloads are successful, the script should report:
 If some downloads fail, re-run the script. Successfully downloaded files
 will be skipped automatically, and only incomplete site-year combinations
 will be retried.
-
 """
 
 import os
