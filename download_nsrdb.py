@@ -245,7 +245,7 @@ def save_checkpoint(completed):
 
 
 def download_site_year(site, year):
-"""
+    """
     Download one year of NSRDB data for a single study location.
 
     Parameters
