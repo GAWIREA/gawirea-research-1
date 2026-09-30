@@ -1,12 +1,125 @@
 """
+================================================================================
 GenerativeAURORA - NSRDB Data Downloader
-Fixed version: correct domain (nrel.gov), checkpointing, no emoji.
+================================================================================
 
-BEFORE RUNNING:
-    1. pip install requests pandas pyarrow
-    2. Replace YOUR_API_KEY and YOUR_EMAIL below
-    3. Run: python download_nsrdb.py
-    4. If power cuts: just re-run, already-downloaded files are skipped automatically.
+PURPOSE
+-------
+This script downloads hourly solar and meteorological data from the NREL
+National Solar Radiation Database (NSRDB) for the five representative study
+locations used in the GenerativeAURORA project.
+
+The downloaded data are used as the raw dataset for the subsequent stages of
+the GenerativeAURORA pipeline.
+
+DATASET CONFIGURATION
+---------------------
+Site Locations:
+For this case, we used five representative locations:
+A. Phoenix AZ     -> Hot desert
+B. Los Angeles CA -> Mediterranian
+C. Denver CO      -> Semi Arid
+D. Miami FL       -> Subtropical
+E. Seattle WA     -> Oceanic
+
+Study Period:
+5 years (2018-2022)
+
+Temporal Resolution:
+60 minutes (hourly)
+
+NSRDB Variables:
+1. Global Horizontal Irradiance (ghi)
+2. Diffuse Horizontal Irradiance (dhi)
+3. Direct Normal Irradiance (dni)
+4. Wind Speed
+5. Air Temperature
+6. Relative Humidity
+7. Surface Pressure
+8. Cloud Type
+9. Solar Zenith Angle
+10. Clearsky GHI
+
+Additional variables are calculated locally after the NSRDB data are
+downloaded:
+1. Clearness Index
+2. Sky Regime
+
+DERIVED VARIABLES
+-----------------
+Clearness Index is calculated as:
+
+    Clearness Index = GHI / Clearsky GHI
+
+The resulting value is clipped to the range [0, 1].
+
+Each observation is then assigned to one of three sky regimes:
+
+    Clearness Index <= 0.10        -> Overcast
+    0.10 < Clearness Index <= 0.35 -> Cloudy
+    Clearness Index > 0.35         -> Clear
+
+MAIN FUNCTIONS
+--------------
+The script is organized into four main functions.
+1. load_checkpoint()
+2. save_checkpoint()
+3. download_site_year()
+4. main()
+
+CHECKPOINT / RESUME MECHANISM
+-----------------------------
+The script uses:
+
+    download_checkpoint.json
+
+to record successfully downloaded site-year combinations.
+
+If the download process is interrupted because of:
+    - power failure,
+    - internet connection problems,
+    - computer restart, or
+    - an API request failure,
+
+the script can simply be run again.
+
+Previously completed files will be skipped automatically, while failed
+downloads will be attempted again.
+
+BEFORE RUNNING
+--------------
+1. Install the required packages:
+
+       pip install requests pandas
+
+2. Provide a valid NREL API key and email address in the CONFIG section
+   below.
+
+   IMPORTANT:
+   Use an environment variable or another secure credential
+   management method for production/research sharing.
+
+3. Run:
+
+       python download_nsrdb.py
+
+4. After all 25 files have been downloaded successfully, continue with:
+
+       python merge_nsrdb.py
+       
+EXPECTED FINAL MESSAGE
+----------------------
+If all downloads are successful, the script should report:
+
+    === Download complete ===
+    Success : 25
+    Skipped : 0
+    Failed  : 0
+
+If some downloads fail, re-run the script. Successfully downloaded files
+will be skipped automatically, and only incomplete site-year combinations
+will be retried.
+
 """
 
 import os
@@ -16,12 +129,23 @@ import requests
 import pandas as pd
 from io import StringIO
 
-# -----------------------------------------------------------------------
-# CONFIG - edit these two lines only
-# -----------------------------------------------------------------------
-API_KEY = "pQ4eEm4XCrFHOWiMFy8ZtuZETH5SkjBAcxLbbagD"   # <-- replace with your NEW key
-EMAIL   = "rhaditkurnia@gmail.com"      # <-- your email address
-# -----------------------------------------------------------------------
+# =============================================================================
+# 1. USER CONFIGURATION
+# =============================================================================
+# Update ONLY the API key and email address below before running the script.
+#
+# IMPORTANT:
+# - Never share your API key publicly.
+# - Do not commit the key to GitHub.
+# - If a key has already been exposed publicly, revoke it and generate a new one.
+
+API_KEY = "YOUR_API_KEY"
+EMAIL = "YOUR_EMAIL"
+
+# =============================================================================
+# 2. STUDY SITES
+# =============================================================================
+# Five representative locations are used to capture different climate regimes.
 
 SITES = [
     {"name": "Phoenix_AZ",    "lat": 33.4484,  "lon": -112.0740, "climate": "hot_desert"},
@@ -31,7 +155,18 @@ SITES = [
     {"name": "Seattle_WA",    "lat": 47.6062,  "lon": -122.3321, "climate": "oceanic"},
 ]
 
+# =============================================================================
+# 3. DOWNLOAD PERIOD
+# =============================================================================
+# Five years of hourly data are downloaded for each site.
+# Total expected files = 5 sites x 5 years = 25 files.
+
 YEARS = [2018, 2019, 2020, 2021, 2022]
+
+# =============================================================================
+# 4. NSRDB VARIABLES
+# =============================================================================
+# Variables requested from the NREL NSRDB API.
 
 ATTRIBUTES = ",".join([
     "ghi",
@@ -46,8 +181,16 @@ ATTRIBUTES = ",".join([
     "clearsky_ghi",
 ])
 
+# =============================================================================
+# 5. OUTPUT AND CHECKPOINT SETTINGS
+# =============================================================================
+
 OUTPUT_DIR      = "nsrdb_data"
 CHECKPOINT_FILE = "download_checkpoint.json"
+
+# =============================================================================
+# 6. NREL NSRDB API POINT
+# =============================================================================
 
 # FIXED: nrel.gov (not nlr.gov)
 BASE_URL = (
@@ -68,7 +211,17 @@ BASE_URL = (
 
 
 def load_checkpoint():
-    """Load set of already-completed (site, year) pairs from checkpoint file."""
+    """
+    Load previously completed site-year combinations.
+
+    Returns
+    -------
+    set
+        A set of tuples in the form:
+            {("Phoenix_AZ", 2018), ("Denver_CO", 2019), ...}
+
+        Returns an empty set if no checkpoint file exists.
+    """
     if os.path.exists(CHECKPOINT_FILE):
         with open(CHECKPOINT_FILE, "r") as f:
             data = json.load(f)
@@ -79,12 +232,50 @@ def load_checkpoint():
 
 
 def save_checkpoint(completed):
-    """Save completed (site, year) pairs to checkpoint file."""
+    """
+    Save successfully completed site-year combinations.
+
+    Parameters
+    ----------
+    completed : set
+        Set of (site_name, year) tuples representing completed downloads.
+    """
     with open(CHECKPOINT_FILE, "w") as f:
         json.dump({"completed": [list(x) for x in completed]}, f, indent=2)
 
 
 def download_site_year(site, year):
+"""
+    Download one year of NSRDB data for a single study location.
+
+    Parameters
+    ----------
+    site : dict
+        Study-site information containing:
+            - name
+            - latitude
+            - longitude
+            - climate classification
+
+    year : int
+        Calendar year to download.
+
+    Returns
+    -------
+    bool
+        True if the download and file saving are successful;
+        False if an HTTP or other error occurs.
+
+    Processing performed
+    --------------------
+    1. Construct the NSRDB API request URL.
+    2. Request the hourly NSRDB data.
+    3. Parse the returned CSV.
+    4. Add site-level metadata.
+    5. Calculate the clearness index.
+    6. Assign the sky regime.
+    7. Save the processed data as a CSV file.
+    """
     fname = os.path.join(OUTPUT_DIR, site["name"] + "_" + str(year) + ".csv")
 
     url = BASE_URL.format(
@@ -145,6 +336,18 @@ def download_site_year(site, year):
 
 
 def main():
+    """
+    Execute the complete NSRDB download workflow.
+
+    The workflow:
+        1. Creates the output directory.
+        2. Loads the download checkpoint.
+        3. Identifies completed and pending site-year combinations.
+        4. Downloads each pending dataset.
+        5. Saves the checkpoint after every successful download.
+        6. Waits between API requests to respect the NREL rate limit.
+        7. Prints a final summary of successful, skipped, and failed downloads.
+    """
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     total     = len(SITES) * len(YEARS)
