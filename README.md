@@ -178,6 +178,108 @@ For GPU training, install a PyTorch build compatible with the CUDA environment o
 9. Run the required Step 8–12 figure, ablation, baseline, and table scripts to produce the paper outputs.
 For expensive training and sampling runs, use a suitable GPU when available. Validate that all intermediate files were generated before proceeding to the next stage.
 
+**Repository organization**
+The following directory tree illustrates the conceptual organization of the GenerativeAURORA research workflow, including data preparation, model development, training, evaluation, uncertainty calibration, and baseline comparisons.
+
+```text
+GenerativeAURORA/
+├── Step1_Data_Preparation/
+│   ├── Step1A_GenerativeAURORA_download_nsrdb.ipynb
+│   ├── Step1B_GenerativeAURORA_merge_nsrdb.ipynb
+│   └── Step1C_GenerativeAURORA_eda_nsrdb.ipynb
+│
+├── Step2_GenerativeAURORA_build_sequences.ipynb
+├── Step3_GenerativeAURORA_build_model.ipynb
+├── Step4_GenerativeAURORA_train_FAITHFUL.ipynb
+├── Step5_GenerativeAURORA_evaluate_FAITHFUL.ipynb
+├── Step6_GenerativeAURORA_conformal_FAITHFUL.ipynb
+│
+├── Step7_Analysis/
+│   ├── Step7A_GenerativeAURORA_figures_FAITHFUL.ipynb
+│   ├── Step7B_GenerativeAURORA_correction_FAITHFUL.ipynb
+│   ├── Step7C_GenerativeAURORA_tables_FAITHFUL.ipynb
+│   └── Step7D_GenerativeAURORA_Fig7_Site_Analysis_FAITHFUL_Colab.ipynb
+│
+├── Step8_GenerativeAURORA_ablation_FAITHFUL.ipynb
+├── Step9_GenerativeAURORA_final_figures_FAITHFUL.ipynb
+│
+├── Step10_Baseline_Comparisons/
+│   ├── Step10A_GenerativeAURORA_Baseline_A_LSTM_FAITHFUL.ipynb
+│   ├── Step10B_GenerativeAURORA_Baseline_B_VAE_FAITHFUL.ipynb
+│   ├── Step10C_GenerativeAURORA_Baseline_C_Timegrad_FAITHFUL.ipynb
+│   ├── Step10D_GenerativeAURORA_Baseline_D_WGAN_FAITHFUL.ipynb
+│   ├── Step10E_GenerativeAURORA_Baseline_E_Normflow_FAITHFUL.ipynb
+│   ├── Step10F_GenerativeAURORA_Baseline_F_MCDropOut_FAITHFUL.ipynb
+│   ├── Step10G_GenerativeAURORA_Compile_Result_Final_FAITHFUL.ipynb
+│   ├── Step10H_GenerativeAURORA_Compile_Results_Table_FAITHFUL.ipynb
+│   └── Step10I_GenerativeAURORA_Fig8_Scenario_Diversity_FAITHFUL.ipynb
+│
+├── NSRDB_Data/
+│   ├── nsrdb_data/
+│   └── merge_nsrdb/
+│
+└── Dataset/
+    ├── checkpoints/
+    ├── checkpoints_mcdropout/
+    ├── checkpoints_normflow/
+    ├── checkpoints_qlstm/
+    ├── checkpoints_timegrad/
+    ├── checkpoints_vae/
+    ├── checkpoints_wgan/
+    ├── evaluation/
+    ├── figures/
+    ├── paper_tables/
+    ├── best_model.pt
+    ├── scaler_params.json
+    ├── sequence_summary.json
+    ├── sequences_test.npz
+    ├── sequences_train.npz
+    ├── sequences_val.npz
+    ├── training_log_mcdropout.csv
+    ├── training_log_normflow.csv
+    ├── training_log_qlstm.csv
+    ├── training_log_timegrad.csv
+    ├── training_log_vae.csv
+    ├── training_log_wgan.csv
+    └── training_log.csv
+```
+Do not commit large raw datasets, checkpoints, API credentials, or private files unless the repository's data-management and licensing policy explicitly allows it.
+
+**Workflow Description**
+A. Step 1 — Data Preparation
+Download, merge, and perform exploratory data analysis on solar irradiance data obtained from the National Solar Radiation Database (NSRDB).
+B. Step 2 — Sequence Construction
+Prepare and organize time-series sequences for model training, validation, and testing.
+C. Step 3 — Model Development
+Define and construct the GenerativeAURORA model architecture.
+D. Step 4 — Model Training
+Train the proposed model and save relevant training outputs.
+E. Step 5 — Model Evaluation
+Evaluate model performance using the implemented evaluation procedures.
+F. Step 6 — Conformal Calibration
+Apply conformal calibration to quantify uncertainty and assess calibration performance.
+G. Step 7 — Results Analysis
+Generate figures, tables, and site-specific analyses for research interpretation.
+H. Step 8 — Ablation Study
+Investigate the contributions of selected model components through ablation experiments.
+I. Step 9 — Final Visualizations
+Produce final figures for research reporting and publication.
+J. Step 10 — Baseline Comparisons
+Compare GenerativeAURORA against LSTM, VAE, TimeGrad, WGAN, normalizing flow, and Monte Carlo dropout baselines.
+
+**Data and Model Artifacts**
+a. NSRDB_Data/ — Directory for raw and merged solar resource datasets.
+b. Dataset/ — Directory for generated sequences, trained model checkpoints, evaluation outputs, figures, and experiment logs.
+c. checkpoints*/ — Model checkpoints generated during training and baseline experiments
+d. evaluation/ — Evaluation outputs and performance assessment results.
+e. figures/ — Generated visualizations and plots.
+f. paper_tables/ — Tables prepared for research reporting and publication.
+
+**Data Management and Reproducibility**
+The directory tree above represents the intended research workflow and may not correspond exactly to the files currently tracked in this repository. Certain datasets, trained model checkpoints, and intermediate outputs may be generated locally or stored externally due to storage limitations, licensing requirements, or reproducibility considerations.
+
+Important: Do not commit large raw datasets, model checkpoints, API credentials, or private files unless explicitly permitted by the repository's data-management and licensing policies. Use .gitignore to exclude unnecessary generated artifacts and sensitive files from version control.
+
 **Citation**
 If you use GenerativeAURORA in research, cite the associated paper or preprint once its bibliographic details are finalized. Until then, please retain the repository URL and the exact commit/version used in your experiment for reproducibility.
 
