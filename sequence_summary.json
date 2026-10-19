@@ -1,0 +1,42 @@
+{
+  "lookback_hours": 16,
+  "horizon_hours": 16,
+  "n_condition_features": 10,
+  "condition_features": [
+    "GHI",
+    "DHI",
+    "DNI",
+    "WIND SPEED",
+    "TEMPERATURE",
+    "RELATIVE HUMIDITY",
+    "PRESSURE",
+    "CLEARSKY GHI",
+    "SOLAR ZENITH ANGLE",
+    "CLEARNESS_INDEX"
+  ],
+  "target_feature": "GHI",
+  "regime_map": {
+    "Clear": 0,
+    "Cloudy": 1,
+    "Overcast": 2
+  },
+  "site_map": {
+    "Phoenix_AZ": 0,
+    "LosAngeles_CA": 1,
+    "Denver_CO": 2,
+    "Miami_FL": 3,
+    "Seattle_WA": 4
+  },
+  "train_years": [
+    2018,
+    2019,
+    2020,
+    2021
+  ],
+  "validation_period": "2022 Jan-Jun",
+  "test_period": "2022 Jul-Dec",
+  "n_train": 7305,
+  "n_val": 905,
+  "n_test": 920,
+  "total_sequences": 9130
+}

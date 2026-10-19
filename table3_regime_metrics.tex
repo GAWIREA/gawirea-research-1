@@ -1,0 +1,14 @@
+\begin{table}[ht]
+\centering
+\caption{GenerativeAURORA + RCCC metrics by sky regime on the test set.}
+\label{tab:regime}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & CRPS & Pinball p10 & Pinball p50 & Pinball p90 & Coverage 90% & Coverage 80% & Width 90% PI & Median MAE \\
+\midrule
+Clear (n=872) & 17.6319 & 6.2857 & 11.9020 & 5.6695 & 95.4600 & 86.3200 & 123.2300 & 23.8041 \\
+Cloudy (n=46) & 14.6820 & 4.1873 & 9.8563 & 6.0297 & 93.8900 & 81.5200 & 77.8400 & 19.7125 \\
+Overcast (n=2) & 15.2299 & 4.6446 & 8.0415 & 9.9026 & 68.7500 & 46.8800 & 11.7700 & 16.0829 \\
+\bottomrule
+\end{tabular}
+\end{table}
