@@ -1,0 +1,7 @@
+,CRPS,Coverage 90% (All),Coverage (Cloudy),Coverage (Overcast),Width 90% PI,Median MAE
+A1: Full + RCCC (proposed),17.4492,95.32,93.89,68.75,120.72,23.5448
+"A2: Full, no RCCC",17.4492,92.23,86.96,53.12,101.8,23.5448
+A3: No regime conditioning,17.4292,92.17,89.95,78.12,102.19,23.5021
+A4: No condition encoder,140.2177,16.75,17.8,3.12,115.12,156.9758
+A5: No site embedding,21.0947,84.47,80.98,50.0,93.92,28.2296
+A6: Gaussian baseline,97.4716,91.11,61.55,50.0,507.03,143.7806

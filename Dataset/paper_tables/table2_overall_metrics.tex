@@ -1,0 +1,16 @@
+\begin{table}[ht]
+\centering
+\caption{Overall evaluation metrics. Best per column in bold. Coverage and width for GenerativeAURORA + RCCC use calibrated 90\% PI.}
+\label{tab:overall}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & CRPS & Pinball p10 & Pinball p50 & Pinball p90 & Coverage 90% & Coverage 80% & Width 90% PI & Median MAE \\
+\midrule
+Gaussian baseline & 97.6286 & 28.4026 & 71.7143 & 27.5252 & 90.7700 & 82.3000 & 508.0300 & 143.4286 \\
+Historical bootstrap & 43.4964 & 13.0180 & 30.2713 & 15.2674 & 89.9500 & 82.8600 & 245.3500 & 60.5426 \\
+DDPM (no regime) & 1339.3348 & 717.3818 & 472.5035 & 589.1345 & 100.0000 & 100.0000 & 16392.8800 & 945.0071 \\
+GenerativeAURORA & 17.4791 & 6.1772 & 11.7914 & 5.6967 & 92.1900 & 86.0000 & 101.5500 & 23.5827 \\
+GenerativeAURORA + RCCC & 17.4791 & 6.1772 & 11.7914 & 5.6967 & 95.3200 & 86.0000 & 120.7200 & 23.5827 \\
+\bottomrule
+\end{tabular}
+\end{table}
