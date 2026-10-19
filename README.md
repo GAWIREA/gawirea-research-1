@@ -182,7 +182,11 @@ For expensive training and sampling runs, use a suitable GPU when available. Val
 If you use GenerativeAURORA in research, cite the associated paper or preprint once its bibliographic details are finalized. Until then, please retain the repository URL and the exact commit/version used in your experiment for reproducibility.
 
 **License**
-Add the license you intend to use before distributing the code publicly. Until a license is included in the repository, users should not assume that the code can be reused, modified, or redistributed under an open-source license.
+GenerativeAURORA is a research software project associated with National Yunlin University of Science and Technology (NYUST) and Girls and Women in Renewable Energy Academy (GAWIREA).
+
+Copyright ownership and licensing arrangements are subject to confirmation with the relevant institutions and contributors.
+
+Unless and until an applicable license is formally established, no open-source license is granted. Please contact the project maintainers regarding permissions for reuse, modification, or redistribution.
 
 **Acknowledgements**
 The project uses solar and meteorological observations from the National Solar Radiation Database (NSRDB). Refer to NSRDB's current data-use and citation guidance when publishing results based on the dataset: https://nsrdb.nrel.gov/.
