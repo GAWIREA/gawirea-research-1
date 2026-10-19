@@ -246,26 +246,18 @@ GenerativeAURORA/
 Do not commit large raw datasets, checkpoints, API credentials, or private files unless the repository's data-management and licensing policy explicitly allows it.
 
 **Workflow Description**
-A. Step 1 — Data Preparation
-Download, merge, and perform exploratory data analysis on solar irradiance data obtained from the National Solar Radiation Database (NSRDB).
-B. Step 2 — Sequence Construction
-Prepare and organize time-series sequences for model training, validation, and testing.
-C. Step 3 — Model Development
-Define and construct the GenerativeAURORA model architecture.
-D. Step 4 — Model Training
-Train the proposed model and save relevant training outputs.
-E. Step 5 — Model Evaluation
-Evaluate model performance using the implemented evaluation procedures.
-F. Step 6 — Conformal Calibration
-Apply conformal calibration to quantify uncertainty and assess calibration performance.
-G. Step 7 — Results Analysis
-Generate figures, tables, and site-specific analyses for research interpretation.
-H. Step 8 — Ablation Study
-Investigate the contributions of selected model components through ablation experiments.
-I. Step 9 — Final Visualizations
-Produce final figures for research reporting and publication.
-J. Step 10 — Baseline Comparisons
-Compare GenerativeAURORA against LSTM, VAE, TimeGrad, WGAN, normalizing flow, and Monte Carlo dropout baselines.
+| Step | Description |
+|---|---|
+| Step 1 — Data Preparation | Download, merge, and perform exploratory data analysis on solar irradiance data obtained from the National Solar Radiation Database (NSRDB). |
+| Step 2 — Sequence Construction | Prepare and organize time-series sequences for model training, validation, and testing. |
+| Step 3 — Model Development | Define and construct the GenerativeAURORA model architecture. |
+| Step 4 — Model Training | Train the proposed model and save relevant training outputs. |
+| Step 5 — Model Evaluation | Evaluate model performance using the implemented evaluation procedures. |
+| Step 6 — Conformal Calibration | Apply conformal calibration to quantify uncertainty and assess calibration performance. |
+| Step 7 — Results Analysis | Generate figures, tables, and site-specific analyses for research interpretation. |
+| Step 8 — Ablation Study | Investigate the contributions of selected model components through ablation experiments. |
+| Step 9 — Final Visualizations | Produce final figures for research reporting and publication. |
+| Step 10 — Baseline Comparisons | Compare GenerativeAURORA against LSTM, VAE, TimeGrad, WGAN, normalizing flow, and Monte Carlo dropout baselines. |
 
 **Data and Model Artifacts**
 a. NSRDB_Data/ — Directory for raw and merged solar resource datasets.
