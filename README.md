@@ -212,7 +212,8 @@ GenerativeAURORA/
     ├── Step10F_GenerativeAURORA_Baseline_F_MCDropOut_FAITHFUL.ipynb
     ├── Step10G_GenerativeAURORA_Compile_Result_Final_FAITHFUL.ipynb
     ├── Step10H_GenerativeAURORA_Compile_Results_Table_FAITHFUL.ipynb
-    └── Step10I_GenerativeAURORA_Fig8_Scenario_Diversity_FAITHFUL.ipynb
+    ├── Step10I_GenerativeAURORA_Fig6_Baseline_Comparison_FAITHFUL.ipynb
+    └── Step10J_GenerativeAURORA_Fig8_Scenario_Diversity_FAITHFUL.ipynb
 
 NSRDB_Data/
 ├── nsrdb_data/
