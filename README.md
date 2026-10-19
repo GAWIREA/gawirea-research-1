@@ -178,3 +178,11 @@ For GPU training, install a PyTorch build compatible with the CUDA environment o
 9. Run the required Step 8–12 figure, ablation, baseline, and table scripts to produce the paper outputs.
 For expensive training and sampling runs, use a suitable GPU when available. Validate that all intermediate files were generated before proceeding to the next stage.
 
+**Citation**
+If you use GenerativeAURORA in research, cite the associated paper or preprint once its bibliographic details are finalized. Until then, please retain the repository URL and the exact commit/version used in your experiment for reproducibility.
+
+**License**
+Add the license you intend to use before distributing the code publicly. Until a license is included in the repository, users should not assume that the code can be reused, modified, or redistributed under an open-source license.
+
+**Acknowledgements**
+The project uses solar and meteorological observations from the National Solar Radiation Database (NSRDB). Refer to NSRDB's current data-use and citation guidance when publishing results based on the dataset: https://nsrdb.nrel.gov/.
