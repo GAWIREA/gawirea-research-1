@@ -204,44 +204,51 @@ GenerativeAURORA/
 ├── Step9_GenerativeAURORA_final_figures_FAITHFUL.ipynb
 │
 ├── Step10_Baseline_Comparisons/
-│   ├── Step10A_GenerativeAURORA_Baseline_A_LSTM_FAITHFUL.ipynb
-│   ├── Step10B_GenerativeAURORA_Baseline_B_VAE_FAITHFUL.ipynb
-│   ├── Step10C_GenerativeAURORA_Baseline_C_Timegrad_FAITHFUL.ipynb
-│   ├── Step10D_GenerativeAURORA_Baseline_D_WGAN_FAITHFUL.ipynb
-│   ├── Step10E_GenerativeAURORA_Baseline_E_Normflow_FAITHFUL.ipynb
-│   ├── Step10F_GenerativeAURORA_Baseline_F_MCDropOut_FAITHFUL.ipynb
-│   ├── Step10G_GenerativeAURORA_Compile_Result_Final_FAITHFUL.ipynb
-│   ├── Step10H_GenerativeAURORA_Compile_Results_Table_FAITHFUL.ipynb
-│   └── Step10I_GenerativeAURORA_Fig8_Scenario_Diversity_FAITHFUL.ipynb
-│
-├── NSRDB_Data/
-│   ├── nsrdb_data/
-│   └── merge_nsrdb/
-│
-└── Dataset/
-    ├── checkpoints/
-    ├── checkpoints_mcdropout/
-    ├── checkpoints_normflow/
-    ├── checkpoints_qlstm/
-    ├── checkpoints_timegrad/
-    ├── checkpoints_vae/
-    ├── checkpoints_wgan/
-    ├── evaluation/
-    ├── figures/
-    ├── paper_tables/
-    ├── best_model.pt
-    ├── scaler_params.json
-    ├── sequence_summary.json
-    ├── sequences_test.npz
-    ├── sequences_train.npz
-    ├── sequences_val.npz
-    ├── training_log_mcdropout.csv
-    ├── training_log_normflow.csv
-    ├── training_log_qlstm.csv
-    ├── training_log_timegrad.csv
-    ├── training_log_vae.csv
-    ├── training_log_wgan.csv
-    └── training_log.csv
+    ├── Step10A_GenerativeAURORA_Baseline_A_LSTM_FAITHFUL.ipynb
+    ├── Step10B_GenerativeAURORA_Baseline_B_VAE_FAITHFUL.ipynb
+    ├── Step10C_GenerativeAURORA_Baseline_C_Timegrad_FAITHFUL.ipynb
+    ├── Step10D_GenerativeAURORA_Baseline_D_WGAN_FAITHFUL.ipynb
+    ├── Step10E_GenerativeAURORA_Baseline_E_Normflow_FAITHFUL.ipynb
+    ├── Step10F_GenerativeAURORA_Baseline_F_MCDropOut_FAITHFUL.ipynb
+    ├── Step10G_GenerativeAURORA_Compile_Result_Final_FAITHFUL.ipynb
+    ├── Step10H_GenerativeAURORA_Compile_Results_Table_FAITHFUL.ipynb
+    └── Step10I_GenerativeAURORA_Fig8_Scenario_Diversity_FAITHFUL.ipynb
+
+NSRDB_Data/
+├── nsrdb_data/
+└── merge_nsrdb/
+
+eda_output/
+├── clearness_index_distribution.csv
+├── hourly_ghi_profile.csv
+├── regime_distribution.csv
+├── rows_per_site_year.csv
+└── seasonal_ghi_stats.csv
+
+Dataset/
+├── checkpoints/
+├── checkpoints_mcdropout/
+├── checkpoints_normflow/
+├── checkpoints_qlstm/
+├── checkpoints_timegrad/
+├── checkpoints_vae/
+├── checkpoints_wgan/
+├── evaluation/
+├── figures/
+├── paper_tables/
+├── best_model.pt
+├── scaler_params.json
+├── sequence_summary.json
+├── sequences_test.npz
+├── sequences_train.npz
+├── sequences_val.npz
+├── training_log_mcdropout.csv
+├── training_log_normflow.csv
+├── training_log_qlstm.csv
+├── training_log_timegrad.csv
+├── training_log_vae.csv
+├── training_log_wgan.csv
+└── training_log.csv
 ```
 Do not commit large raw datasets, checkpoints, API credentials, or private files unless the repository's data-management and licensing policy explicitly allows it.
 
