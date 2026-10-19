@@ -1,0 +1,10 @@
+group,name,n,coverage_before,width_before,coverage_after,width_after,delta_coverage
+overall,All,920,92.1875,101.5529,95.3193,120.7201,3.13
+regime,Clear,872,92.4742,103.7299,95.4558,123.2318,2.98
+regime,Cloudy,46,88.4511,64.3797,93.8859,77.8447,5.43
+regime,Overcast,2,53.125,7.3558,68.75,11.7655,15.62
+site,Phoenix_AZ,184,91.9837,84.664,95.2446,103.8572,3.26
+site,LosAngeles_CA,184,94.2935,81.2386,96.8071,100.951,2.51
+site,Denver_CO,184,89.3342,118.8013,93.2405,137.898,3.91
+site,Miami_FL,184,91.9497,130.9861,94.9049,150.335,2.96
+site,Seattle_WA,184,93.3764,92.0745,96.3995,110.5592,3.02

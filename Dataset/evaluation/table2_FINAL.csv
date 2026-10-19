@@ -1,0 +1,9 @@
+Method,CRPS,Pinball_p10,Pinball_p50,Coverage_90pct,Width_90PI,Median_MAE
+Gaussian baseline,99.39,28.83,73.39,91.2,518.9,146.79
+Historical bootstrap,44.87,13.52,31.28,90.6,254.0,62.55
+WGAN-GP,---,---,---,---,---,---
+Conditional VAE,---,---,---,---,---,---
+MC Dropout LSTM,---,---,---,---,---,---
+TimeGrad-style,---,---,---,---,---,---
+DDPM (no regime),20.64,7.53,13.89,93.6,133.7,27.77
+GenerativeAURORA + RCCC,20.7,7.6,13.94,96.1,151.6,27.88

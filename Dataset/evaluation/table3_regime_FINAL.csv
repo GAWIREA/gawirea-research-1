@@ -1,0 +1,9 @@
+Method,Clear_Coverage,Cloudy_Coverage,Overcast_Coverage
+Gaussian baseline,---,---,---
+Historical bootstrap,---,---,---
+WGAN-GP,40.94%,35.33%,12.5%
+Conditional VAE,18.38%,7.74%,9.38%
+MC Dropout LSTM,69.83%,53.94%,43.75%
+TimeGrad-style,91.43%,91.3%,93.75%
+DDPM (no regime),---,---,---
+GenerativeAURORA + RCCC,96.24%,95.03%,88.75%
