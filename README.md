@@ -260,12 +260,12 @@ Do not commit large raw datasets, checkpoints, API credentials, or private files
 | Step 10 — Baseline Comparisons | Compare GenerativeAURORA against LSTM, VAE, TimeGrad, WGAN, normalizing flow, and Monte Carlo dropout baselines. |
 
 **Data and Model Artifacts**
-a. NSRDB_Data/ — Directory for raw and merged solar resource datasets.
-b. Dataset/ — Directory for generated sequences, trained model checkpoints, evaluation outputs, figures, and experiment logs.
-c. checkpoints*/ — Model checkpoints generated during training and baseline experiments
-d. evaluation/ — Evaluation outputs and performance assessment results.
-e. figures/ — Generated visualizations and plots.
-f. paper_tables/ — Tables prepared for research reporting and publication.
+1. NSRDB_Data/ — Directory for raw and merged solar resource datasets.
+2. Dataset/ — Directory for generated sequences, trained model checkpoints, evaluation outputs, figures, and experiment logs.
+3. checkpoints*/ — Model checkpoints generated during training and baseline experiments
+4. evaluation/ — Evaluation outputs and performance assessment results.
+5. figures/ — Generated visualizations and plots.
+6. paper_tables/ — Tables prepared for research reporting and publication.
 
 **Data Management and Reproducibility**
 The directory tree above represents the intended research workflow and may not correspond exactly to the files currently tracked in this repository. Certain datasets, trained model checkpoints, and intermediate outputs may be generated locally or stored externally due to storage limitations, licensing requirements, or reproducibility considerations.
